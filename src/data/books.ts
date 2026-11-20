@@ -1,0 +1,89 @@
+export interface Book {
+  id: number;
+  name: string;
+  abbr: string;
+  chapters: number;
+  testament: 'old' | 'new';
+}
+
+const NAMES = [
+  '창세기', '출애굽기', '레위기', '민수기', '신명기', '여호수아', '사사기', '룻기', '사무엘상', '사무엘하',
+  '열왕기상', '열왕기하', '역대상', '역대하', '에스라', '느헤미야', '에스더', '욥기', '시편', '잠언',
+  '전도서', '아가', '이사야', '예레미야', '예레미야애가', '에스겔', '다니엘', '호세아', '요엘', '아모스',
+  '오바댜', '요나', '미가', '나훔', '하박국', '스바냐', '학개', '스가랴', '말라기',
+  '마태복음', '마가복음', '누가복음', '요한복음', '사도행전', '로마서', '고린도전서', '고린도후서', '갈라디아서', '에베소서',
+  '빌립보서', '골로새서', '데살로니가전서', '데살로니가후서', '디모데전서', '디모데후서', '디도서', '빌레몬서', '히브리서', '야고보서',
+  '베드로전서', '베드로후서', '요한일서', '요한이서', '요한삼서', '유다서', '요한계시록',
+];
+
+const ABBRS = [
+  '창', '출', '레', '민', '신', '수', '삿', '룻', '삼상', '삼하',
+  '왕상', '왕하', '대상', '대하', '스', '느', '에', '욥', '시', '잠',
+  '전', '아', '사', '렘', '애', '겔', '단', '호', '욜', '암',
+  '옵', '욘', '미', '나', '합', '습', '학', '슥', '말',
+  '마', '막', '눅', '요', '행', '롬', '고전', '고후', '갈', '엡',
+  '빌', '골', '살전', '살후', '딤전', '딤후', '딛', '몬', '히', '약',
+  '벧전', '벧후', '요일', '요이', '요삼', '유', '계',
+];
+
+const CHAPTERS = [
+  50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150, 31,
+  12, 8, 66, 52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
+  28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5,
+  5, 3, 5, 1, 1, 1, 22,
+];
+
+export const BOOKS: Book[] = NAMES.map((name, i) => ({
+  id: i + 1,
+  name,
+  abbr: ABBRS[i],
+  chapters: CHAPTERS[i],
+  testament: i < 39 ? 'old' : 'new',
+}));
+
+export const bookById = (id: number): Book => BOOKS[Math.min(Math.max(id, 1), 66) - 1];
+
+function findBook(token: string): Book | undefined {
+  return (
+    BOOKS.find((b) => b.abbr === token) ??
+    BOOKS.find((b) => b.name === token) ??
+    BOOKS.find((b) => b.name.startsWith(token)) ??
+    BOOKS.find((b) => b.abbr.startsWith(token))
+  );
+}
+
+export interface Ref {
+  book: number;
+  chapter: number;
+  verse?: number;
+}
+
+/** "요3:16", "롬 8", "창세기 1장 3절", "요일1" 같은 입력을 해석합니다. */
+export function parseReference(input: string): Ref | null {
+  const m = input.trim().match(/^([가-힣]+)\s*(?:(\d+)\s*장?\s*(?:[:.\s]\s*(\d+)\s*절?)?)?$/);
+  if (!m) return null;
+  const book = findBook(m[1]);
+  if (!book) return null;
+  const chapter = Math.min(Math.max(Number(m[2] ?? 1), 1), book.chapters);
+  const verse = m[3] ? Math.max(Number(m[3]), 1) : undefined;
+  return { book: book.id, chapter, verse };
+}
+
+/** [1,2,3,5] → "창 1:1-3,5" */
+export function formatRef(book: number, chapter: number, verses: number[] = []): string {
+  const head = `${bookById(book).abbr} ${chapter}`;
+  if (verses.length === 0) return `${head}장`;
+  const sorted = [...new Set(verses)].sort((a, b) => a - b);
+  const parts: string[] = [];
+  let start = sorted[0];
+  let prev = start;
+  for (const v of [...sorted.slice(1), Infinity]) {
+    if (v === prev + 1) {
+      prev = v;
+      continue;
+    }
+    parts.push(start === prev ? `${start}` : `${start}-${prev}`);
+    start = prev = v;
+  }
+  return `${head}:${parts.join(',')}`;
+}

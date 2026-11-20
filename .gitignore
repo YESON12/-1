@@ -1,0 +1,16 @@
+node_modules
+dist
+dev-dist
+*.local
+
+# 성경 데이터는 저작권이 있으므로 저장소에 올리지 않습니다
+sample-data
+*.bdb
+*.bdf
+
+# Capacitor / Android 빌드 산출물
+android/app/build
+android/.gradle
+
+# 앱(APK)에 넣는 성경 데이터
+bundled-data
