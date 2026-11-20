@@ -1,3 +1,4 @@
+import { NAMES } from '../theme';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -79,7 +80,7 @@ export default function Lists() {
   return (
     <>
       <TopBar
-        title="통합리스트"
+        title={NAMES.lists}
         right={
           tab === 'history' && !!history?.length ? (
             <button

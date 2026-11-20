@@ -1,3 +1,4 @@
+import { NAMES } from '../theme';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BOOKS, bookById } from '../data/books';
@@ -59,7 +60,7 @@ export default function Search() {
 
   return (
     <>
-      <TopBar title="단어검색" />
+      <TopBar title={NAMES.search} />
       <div className="page">
         <form className="search-form" onSubmit={run}>
           {s.terms.map((t, i) => (

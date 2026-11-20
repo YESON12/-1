@@ -3,6 +3,8 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
 import { SettingsProvider } from './settings';
 import { ToastProvider } from './components/ui';
 import Home from './pages/Home';
+import HomeEasy from './pages/HomeEasy';
+import { EASY } from './theme';
 import Reader from './pages/Reader';
 import BookPicker from './pages/BookPicker';
 import Search from './pages/Search';
@@ -11,7 +13,7 @@ import Prayers from './pages/Prayers';
 import Creed from './pages/Creed';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
-import Pending from './pages/Pending';
+import { SongList, SongView } from './pages/Songs';
 import { isNative } from './native';
 import BundledBible from './components/BundledBible';
 
@@ -38,7 +40,7 @@ export default function App() {
         {/* HashRouter: GitHub Pages 와 Capacitor(Android)에서 서버 설정 없이 동작 */}
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={EASY ? <HomeEasy /> : <Home />} />
             <Route path="/books" element={<BookPicker />} />
             <Route path="/read/:book/:chapter" element={<Reader />} />
             <Route path="/search" element={<Search />} />
@@ -47,8 +49,10 @@ export default function App() {
             <Route path="/creed/:kind" element={<Creed />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<Help />} />
-            <Route path="/hymns" element={<Pending title="새찬송가" file="new_song.txt" />} />
-            <Route path="/readings" element={<Pending title="교독문" file="교독문.txt" />} />
+            <Route path="/hymns" element={<SongList kind="hymn" />} />
+            <Route path="/hymns/:no" element={<SongView kind="hymn" />} />
+            <Route path="/readings" element={<SongList kind="reading" />} />
+            <Route path="/readings/:no" element={<SongView kind="reading" />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </HashRouter>

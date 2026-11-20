@@ -77,7 +77,11 @@ export const HIGHLIGHT_LABELS: Record<HighlightColor, string> = {
   orange: '주황',
 };
 
+export type { Song } from '../data/songbook';
+import type { Song } from '../data/songbook';
+
 export const db = new Dexie('my-lovely-bible') as Dexie & {
+  songs: Table<Song, [string, number]>;
   versions: EntityTable<Version, 'code'>;
   verses: Table<Verse, [string, number, number, number]>;
   bookmarks: EntityTable<Bookmark, 'id'>;
@@ -97,6 +101,11 @@ db.version(1).stores({
   history: 'key, at',
   readRecords: 'key, book',
   prayers: '++id, status, tag, createdAt',
+});
+
+// v2: 새찬송가 · 교독문 (사용자가 가져온 텍스트 파일)
+db.version(2).stores({
+  songs: '[kind+no], kind',
 });
 
 export const verseKey = (book: number, chapter: number, verse: number) => `${book}:${chapter}:${verse}`;

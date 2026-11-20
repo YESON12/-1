@@ -17,6 +17,7 @@ import { useVersions } from '../hooks/useVersions';
 import { useTTS } from '../hooks/useTTS';
 import { isNative, nativeKeepAwake } from '../native';
 import { copyText, Empty, Sheet, shareText, Tabs, TopBar, useToast, VerseText } from '../components/ui';
+import { EASY } from '../theme';
 
 const DEFAULT_TAGS = ['주일설교', '암송구절', '심방', 'QT'];
 const clampInt = (v: string | undefined, lo: number, hi: number) => Math.min(Math.max(Number(v) || lo, lo), hi);
@@ -286,7 +287,7 @@ export default function Reader() {
               {tts.speaking ? '■' : '🔊'}
             </button>
             <button className="icon-btn" aria-label="보기 설정" onClick={() => setSheet('view')}>
-              Aa
+              {EASY ? '글씨' : 'Aa'}
             </button>
           </>
         }

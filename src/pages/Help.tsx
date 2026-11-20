@@ -1,3 +1,4 @@
+import { NAMES } from '../theme';
 import { TopBar } from '../components/ui';
 
 const TIPS: [string, string][] = [
@@ -16,7 +17,7 @@ const TIPS: [string, string][] = [
 export default function Help() {
   return (
     <>
-      <TopBar title="사용설명" />
+      <TopBar title={NAMES.help} />
       <div className="page">
         {TIPS.map(([t, d]) => (
           <section key={t} className="card">

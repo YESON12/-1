@@ -45,19 +45,24 @@ function paperHtml(): Plugin {
 
 // base './' 는 GitHub Pages 하위 경로와 Capacitor(Android) 모두에서 동작하게 해 줍니다.
 // `vite build --mode android` → 성경 데이터 포함, 서비스워커 없음 (APK 전용)
-// `vite build --mode paper`   → 따뜻한 종이책 디자인 (별도 사이트로 배포)
+// `vite build --mode paper`   → 따뜻한 종이책 디자인 (/paper/)
+// `vite build --mode paper2`  → 종이책 2: 중년층용 큰 글씨·아이콘 메뉴 (/paper/v2/)
 export default defineConfig(({ mode }) => {
   const android = mode === 'android';
-  const paper = mode === 'paper';
+  const theme = mode === 'paper2' ? 'paper2' : mode === 'paper' ? 'paper' : 'default';
+  const paper = theme !== 'default';
+  const easy = theme === 'paper2';
   return {
     base: './',
     define: {
       'import.meta.env.VITE_BUNDLED_BIBLES': JSON.stringify(android ? JSON.stringify(BUNDLED) : ''),
-      __THEME__: JSON.stringify(paper ? 'paper' : 'default'),
+      __THEME__: JSON.stringify(theme),
     },
     resolve: {
       alias: {
-        '@theme-css': resolve(paper ? 'src/styles/paper.css' : 'src/styles/theme-default.css'),
+        '@theme-css': resolve(
+          easy ? 'src/styles/paper2.css' : paper ? 'src/styles/paper.css' : 'src/styles/theme-default.css',
+        ),
       },
     },
     plugins: [
@@ -70,8 +75,8 @@ export default defineConfig(({ mode }) => {
             registerType: 'prompt',
             includeAssets: ['favicon.svg'],
             manifest: {
-              name: paper ? 'My Lovely Bible · 종이책' : 'My Lovely Bible',
-              short_name: paper ? '성경 종이책' : 'MLB 성경',
+              name: easy ? 'My Lovely Bible · 큰 글씨' : paper ? 'My Lovely Bible · 종이책' : 'My Lovely Bible',
+              short_name: easy ? '큰글씨 성경' : paper ? '성경 종이책' : 'MLB 성경',
               description: '성경읽기 · 역본비교 · 형광펜 · 메모 · 기도수첩',
               lang: 'ko',
               start_url: './',
@@ -89,7 +94,8 @@ export default defineConfig(({ mode }) => {
             workbox: {
               globPatterns: ['**/*.{js,css,html,svg,png,wasm}'],
               maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-              // 기존 앱(/-1/)의 서비스워커가 같은 저장소의 종이책 사이트(/-1/paper/)를 가로채지 않게
+              // 기존 앱(/-1/)의 서비스워커가 같은 저장소의 종이책 사이트(/-1/paper/, /-1/paper/v2/)를
+              // 가로채지 않게. 이미 설치된 옛 서비스워커도 이 규칙을 갖고 있으므로 새 사이트는 /paper/ 아래에 둡니다.
               navigateFallbackDenylist: paper ? [] : [/\/paper(\/|$)/],
               // 종이책 디자인의 웹폰트를 한 번 받으면 오프라인에서도 쓰도록 저장
               runtimeCaching: paper

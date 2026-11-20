@@ -1106,3 +1106,110 @@ mark {
   padding: 6px 8px 6px 16px;
   font-size: 0.92rem;
 }
+
+/* ---------- 새찬송가 · 교독문 ---------- */
+.song-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.song-list a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-height: 52px;
+  padding: 12px 6px;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+}
+.song-list a:active {
+  background: var(--surface-2);
+}
+.song-no {
+  flex: 0 0 3ch;
+  text-align: right;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.song-title {
+  font-size: 1.05rem;
+}
+.song-none {
+  padding: 32px 0;
+}
+.song {
+  font-family: var(--sans);
+  padding-bottom: 48px;
+}
+.font-serif .song {
+  font-family: var(--serif);
+}
+.song-head {
+  margin: 4px 0 8px;
+  font-size: 1.2em;
+  line-height: 1.4;
+}
+.song-head-no {
+  display: block;
+  font-size: 0.6em;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+.stanza {
+  margin: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+.stanza p,
+.resp {
+  margin: 0;
+  word-break: keep-all;
+}
+.stanza-label {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-family: var(--sans);
+  font-size: 0.7em;
+  font-weight: 700;
+  color: var(--accent);
+}
+.stanza.chorus {
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 45%, transparent);
+}
+.resp {
+  display: grid;
+  grid-template-columns: 3.4em 1fr;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+.resp-role {
+  font-family: var(--sans);
+  font-size: 0.68em;
+  font-weight: 700;
+  padding-top: 0.35em;
+  color: var(--muted);
+}
+.resp-people .resp-text {
+  font-weight: 700;
+}
+.resp-people .resp-role {
+  color: var(--accent);
+}
+.resp-all {
+  background: color-mix(in srgb, var(--accent-soft) 45%, transparent);
+}
+.resp-all .resp-role,
+.resp-all .resp-text {
+  color: var(--accent);
+  font-weight: 700;
+}
+.song-nav {
+  margin-top: 20px;
+  font-family: var(--sans);
+  font-size: 1rem;
+}

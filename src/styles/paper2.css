@@ -1,0 +1,312 @@
+/*
+ * 종이책 2 — 중년층이 오래 보기 편하게.
+ * 종이책 색감은 그대로 두고: 글자 크게(기본 18px), 보조 글자·번호를 진하게(대비 7:1 내외),
+ * 누르는 곳 크게(56px), 장식(영문 머리글·점선) 빼기.
+ */
+@import './paper.css';
+
+:root {
+  --muted: #5e5345;
+  --border: #d6c9b3;
+  --rule: #b9a682;
+  --gold: #7a5a22;
+  --accent: #8a2f1f;
+  --t-red: #8a2f1f;
+  --t-red-bg: #f3e1d9;
+  --t-green: #2f5f3c;
+  --t-green-bg: #e1ecdf;
+  --t-blue: #2c4f78;
+  --t-blue-bg: #dfe6ef;
+  --t-gold: #7a5418;
+  --t-gold-bg: #f1e4c9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --muted: #c4b8a5;
+    --border: #463b31;
+    --rule: #6b5a45;
+    --gold: #dcbb7c;
+    --accent: #eba78b;
+    --t-red: #f0ae95;
+    --t-red-bg: #3b251e;
+    --t-green: #a9d2b0;
+    --t-green-bg: #1f3125;
+    --t-blue: #a9c3e3;
+    --t-blue-bg: #1e2a39;
+    --t-gold: #e2c486;
+    --t-gold-bg: #3a2e1a;
+  }
+}
+:root[data-theme='dark'] {
+  --muted: #c4b8a5;
+  --border: #463b31;
+  --rule: #6b5a45;
+  --gold: #dcbb7c;
+  --accent: #eba78b;
+  --t-red: #f0ae95;
+  --t-red-bg: #3b251e;
+  --t-green: #a9d2b0;
+  --t-green-bg: #1f3125;
+  --t-blue: #a9c3e3;
+  --t-blue-bg: #1e2a39;
+  --t-gold: #e2c486;
+  --t-gold-bg: #3a2e1a;
+}
+
+/* 화면 전체 글자 기준 16px → 18px (rem 으로 된 글자가 모두 커짐) */
+html {
+  font-size: 112.5%;
+}
+body {
+  line-height: 1.6;
+}
+
+/* ---------- 누르는 곳 크게 ---------- */
+.topbar {
+  min-height: 60px;
+}
+.topbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.icon-btn {
+  min-width: 48px;
+  height: 48px;
+}
+.btn {
+  min-height: 52px;
+  font-weight: 600;
+  border-width: 1.5px;
+}
+.btn.small {
+  min-height: 42px;
+  font-size: 0.95rem;
+}
+.input {
+  min-height: 54px;
+  font-size: 18px;
+}
+.tab,
+.seg button {
+  min-height: 48px;
+  font-size: 1rem;
+}
+.chip,
+.chip-btn {
+  min-height: 40px;
+  font-size: 0.95rem;
+}
+/* 읽기 화면 머리글: "창세기 1장" 이 잘리지 않게 오른쪽 버튼을 조금 좁게 */
+.topbar-right {
+  gap: 0;
+}
+.topbar-right .icon-btn {
+  min-width: 42px;
+  font-size: 0.95rem;
+}
+.topbar .chip-btn {
+  max-width: 78px;
+  padding: 6px 9px;
+  font-size: 0.85rem;
+}
+.hint,
+.small,
+.muted {
+  color: var(--muted);
+}
+.hint {
+  font-size: 0.95rem;
+}
+
+/* ---------- 홈 ---------- */
+.easy-home {
+  padding: calc(var(--sa-top) + 28px) 18px 32px;
+  gap: 20px;
+}
+.easy-hero {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+.easy-hero h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--accent);
+}
+.easy-hero p {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.easy-continue {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  row-gap: 2px;
+  padding: 16px 16px 16px 24px;
+}
+.easy-continue .easy-continue-label {
+  grid-column: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.easy-continue b {
+  grid-column: 1;
+  font-size: 1.45rem !important;
+}
+.easy-continue .icon {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--accent);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 138px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1.5px solid color-mix(in srgb, var(--tone) 28%, transparent);
+  background: var(--tone-bg);
+  color: var(--text);
+  text-decoration: none;
+}
+.tile:active {
+  filter: brightness(0.96);
+}
+.tile-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--tone);
+}
+.tile-label {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--tone);
+}
+.tile-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.tone-red {
+  --tone: var(--t-red);
+  --tone-bg: var(--t-red-bg);
+}
+.tone-green {
+  --tone: var(--t-green);
+  --tone-bg: var(--t-green-bg);
+}
+.tone-blue {
+  --tone: var(--t-blue);
+  --tone-bg: var(--t-blue-bg);
+}
+.tone-gold {
+  --tone: var(--t-gold);
+  --tone-bg: var(--t-gold-bg);
+}
+
+.more-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.more-list li + li {
+  border-top: 1px solid var(--border);
+}
+.more-list a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 0 14px 0 16px;
+  color: var(--text);
+  text-decoration: none;
+}
+.more-list a:active {
+  background: var(--surface-2);
+}
+.more-icon {
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+.more-label {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.more-list a > .icon {
+  color: var(--muted);
+}
+
+/* ---------- 성경 본문 ---------- */
+.vnum {
+  color: var(--reader-num, var(--accent));
+}
+.verse {
+  padding: 10px 8px;
+}
+.float-arrow {
+  width: 56px;
+  height: 56px;
+  font-size: 1.8rem;
+  border-width: 1.5px;
+}
+.action-row button {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+/* ---------- 책 선택 ---------- */
+.book {
+  padding: 12px 4px;
+}
+.book-abbr {
+  font-size: 1.25rem;
+}
+.book-name {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.num {
+  min-height: 52px;
+  font-size: 1.05rem;
+}
+
+/* ---------- 찬송가 · 교독문 ---------- */
+.song-list a {
+  min-height: 60px;
+}
+.song-title {
+  font-size: 1.1rem;
+}
+.resp-role {
+  font-size: 0.72em;
+}
+
+/* 장식 줄이기 */
+.toc-dots,
+.cover-kicker {
+  display: none;
+}

@@ -23,8 +23,9 @@ export const DEFAULT_SETTINGS: Settings = {
   primaryVersion: null,
   compareVersions: [],
   compareOn: false,
-  fontSize: 19,
-  lineHeight: 1.75,
+  // 종이책 2(중년층용)는 처음부터 큰 글씨 · 넓은 줄 간격
+  fontSize: __THEME__ === 'paper2' ? 22 : 19,
+  lineHeight: __THEME__ === 'paper2' ? 1.85 : 1.75,
   fontFamily: 'serif',
   showDividers: true,
   showArrows: true,

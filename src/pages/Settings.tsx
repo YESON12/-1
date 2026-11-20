@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { deleteVersion, importBdb } from '../db/importBdb';
 import { exportBackup, importBackup } from '../db/backup';
+import { deleteSongs, importSongFile, KIND_LABEL, useSongList } from '../db/importSongs';
+import type { SongKind } from '../data/songbook';
 import { DEFAULT_SETTINGS, useSettings, type Settings as S } from '../settings';
 import { useVersions } from '../hooks/useVersions';
 import { TopBar, useToast } from '../components/ui';
@@ -21,10 +23,52 @@ export default function Settings() {
   const fileRef = useRef<HTMLInputElement>(null);
   const backupRef = useRef<HTMLInputElement>(null);
   const [progress, setProgress] = useState<{ name: string; ratio: number } | null>(null);
+  const songRef = useRef<HTMLInputElement>(null);
+  const [songBusy, setSongBusy] = useState(false);
+  const hymns = useSongList('hymn');
+  const readings = useSongList('reading');
 
   useEffect(() => {
-    if (location.hash === '#import') document.getElementById('import')?.scrollIntoView();
+    const id = location.hash.slice(1);
+    if (id === 'import' || id === 'songs') document.getElementById(id)?.scrollIntoView();
   }, [location.hash]);
+
+  const onSongFiles = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setSongBusy(true);
+    for (const file of Array.from(files)) {
+      try {
+        const r = await importSongFile(file);
+        toast(`${KIND_LABEL[r.kind]} ${r.count}개를 가져왔습니다`);
+      } catch (e) {
+        toast(`${file.name}: ${(e as Error).message || '가져오지 못했습니다'}`);
+      }
+    }
+    setSongBusy(false);
+    if (songRef.current) songRef.current.value = '';
+  };
+
+  const songRow = (kind: SongKind, list: { no: number }[] | undefined) => (
+    <li key={kind}>
+      <span>
+        <b>{KIND_LABEL[kind]}</b>{' '}
+        <span className="muted small">{list?.length ? `${list.length}개` : '없음'}</span>
+      </span>
+      {!!list?.length && (
+        <button
+          className="link-btn danger"
+          onClick={async () => {
+            if (confirm(`${KIND_LABEL[kind]}을(를) 이 기기에서 지울까요?`)) {
+              await deleteSongs(kind);
+              toast('삭제했습니다');
+            }
+          }}
+        >
+          삭제
+        </button>
+      )}
+    </li>
+  );
 
   const onFiles = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -89,6 +133,19 @@ export default function Settings() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section className="card" id="songs">
+          <h2>찬송가 · 교독문 파일</h2>
+          <p className="hint">
+            <code>new_song.txt</code>(새찬송가)와 <code>교독문.txt</code> 파일을 선택하세요. 두 파일을 한꺼번에 골라도
+            됩니다. 한 번 가져오면 이 기기에 저장됩니다.
+          </p>
+          <input ref={songRef} type="file" multiple hidden onChange={(e) => onSongFiles(e.target.files)} />
+          <button className="btn primary block" disabled={songBusy} onClick={() => songRef.current?.click()}>
+            {songBusy ? '가져오는 중…' : '찬송가 · 교독문 파일 가져오기'}
+          </button>
+          <ul className="version-list">{[songRow('hymn', hymns), songRow('reading', readings)]}</ul>
         </section>
 
         <section className="card">

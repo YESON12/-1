@@ -8,6 +8,25 @@ interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
 }
 
+/** 브라우저가 "앱 설치"를 제안할 수 있을 때 설치 함수를 돌려줍니다 */
+export function useInstallPrompt() {
+  const [evt, setEvt] = useState<InstallPromptEvent | null>(null);
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setEvt(e as InstallPromptEvent);
+    };
+    window.addEventListener('beforeinstallprompt', onPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', onPrompt);
+  }, []);
+  return evt
+    ? async () => {
+        await evt.prompt();
+        setEvt(null);
+      }
+    : null;
+}
+
 const MENU: { to: string; label: string; icon: string; desc: string }[] = [
   { to: '/books', label: '성경읽기', icon: '📖', desc: '66권 본문' },
   { to: '/lists', label: '통합리스트', icon: '🔖', desc: '북마크 · 형광펜 · 메모' },
@@ -57,17 +76,7 @@ function Toc() {
 export default function Home() {
   const { settings } = useSettings();
   const { versions } = useVersions();
-  const [installEvt, setInstallEvt] = useState<InstallPromptEvent | null>(null);
-
-  useEffect(() => {
-    const onPrompt = (e: Event) => {
-      e.preventDefault();
-      setInstallEvt(e as InstallPromptEvent);
-    };
-    window.addEventListener('beforeinstallprompt', onPrompt);
-    return () => window.removeEventListener('beforeinstallprompt', onPrompt);
-  }, []);
-
+  const install = useInstallPrompt();
   const last = settings.last;
 
   return (
@@ -123,14 +132,8 @@ export default function Home() {
         </nav>
       )}
 
-      {installEvt && (
-        <button
-          className="btn block"
-          onClick={async () => {
-            await installEvt.prompt();
-            setInstallEvt(null);
-          }}
-        >
+      {install && (
+        <button className="btn block" onClick={install}>
           {PAPER ? '홈 화면에 앱 설치' : '📲 홈 화면에 앱 설치'}
         </button>
       )}
