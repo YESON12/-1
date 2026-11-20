@@ -72,7 +72,8 @@ export default defineConfig(({ mode }) => {
       // disable 이어도 virtual:pwa-register 모듈은 제공되어 App.tsx 가 그대로 빌드됨
       VitePWA({
             disable: android,
-            registerType: 'prompt',
+            // 기존 앱(/-1/)은 새 버전을 받으면 바로 적용: 옛 서비스워커가 /-1/paper/... 를 가로채는 일을 빨리 끝내기 위해
+            registerType: paper ? 'prompt' : 'autoUpdate',
             includeAssets: ['favicon.svg'],
             manifest: {
               name: easy ? 'My Lovely Bible · 큰 글씨' : paper ? 'My Lovely Bible · 종이책' : 'My Lovely Bible',
