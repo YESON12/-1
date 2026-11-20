@@ -1,4 +1,4 @@
-# main 에 push 하면 웹앱(PWA)을 빌드해서 GitHub Pages 에 배포합니다.
+# main 에 push 하면 두 사이트(기존 디자인 + 종이책)를 함께 빌드해서 GitHub Pages 에 배포합니다.
 name: Deploy to GitHub Pages
 
 on:
@@ -17,8 +17,6 @@ concurrency:
 
 jobs:
   build:
-    # 기존 디자인은 YESON12/-1 저장소에서만 배포 (종이책 사이트는 deploy-site.yml)
-    if: github.repository == 'YESON12/-1'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +25,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # dist/        = 기존 디자인 (https://yeson12.github.io/-1/)
+      # dist/paper/  = 종이책 소개 페이지 + /paper/app/ 종이책 앱
+      - run: npm run build:pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -89,6 +89,8 @@ export default defineConfig(({ mode }) => {
             workbox: {
               globPatterns: ['**/*.{js,css,html,svg,png,wasm}'],
               maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+              // 기존 앱(/-1/)의 서비스워커가 같은 저장소의 종이책 사이트(/-1/paper/)를 가로채지 않게
+              navigateFallbackDenylist: paper ? [] : [/\/paper(\/|$)/],
               // 종이책 디자인의 웹폰트를 한 번 받으면 오프라인에서도 쓰도록 저장
               runtimeCaching: paper
                 ? [
