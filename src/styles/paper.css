@@ -1,0 +1,421 @@
+/*
+ * "따뜻한 종이책" 테마 — `vite build --mode paper` 에서만 global.css 뒤에 덧씌워집니다.
+ * 아이보리 종이, 먹색 본문, 명조 제목, 가는 괘선, 그림자 대신 종이 겹침.
+ */
+:root {
+  --bg: #f4eee2;
+  --surface: #fbf8f1;
+  --surface-2: #ece4d4;
+  --text: #2b241c;
+  --muted: #857a6a;
+  --border: #ddd2bf;
+  --rule: #c9b998;
+  --accent: #8b3a2a;
+  --accent-contrast: #fbf8f1;
+  --accent-soft: #f1e2d6;
+  --gold: #a88443;
+  --memo: #3f5f7a;
+  --rc-1: #ecdccd;
+  --rc-2: #d4ab92;
+  --rc-3: #9c5a43;
+  --shadow: 0 1px 0 rgba(60, 40, 20, 0.06), 0 10px 30px -12px rgba(60, 40, 20, 0.22);
+  --radius: 6px;
+  --sans: 'IBM Plex Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --serif: 'Noto Serif KR', 'Nanum Myeongjo', 'AppleMyungjo', 'Batang', serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #1b1713;
+    --surface: #231e19;
+    --surface-2: #2d2620;
+    --text: #ece3d3;
+    --muted: #a39785;
+    --border: #3a3129;
+    --rule: #5a4b39;
+    --accent: #d9957a;
+    --accent-contrast: #1b1713;
+    --accent-soft: #3a261e;
+    --gold: #c9a464;
+    --memo: #9cbcd6;
+    --rc-1: #43302a;
+    --rc-2: #6e4535;
+    --rc-3: #b06b50;
+    --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #1b1713;
+  --surface: #231e19;
+  --surface-2: #2d2620;
+  --text: #ece3d3;
+  --muted: #a39785;
+  --border: #3a3129;
+  --rule: #5a4b39;
+  --accent: #d9957a;
+  --accent-contrast: #1b1713;
+  --accent-soft: #3a261e;
+  --gold: #c9a464;
+  --memo: #9cbcd6;
+  --rc-1: #43302a;
+  --rc-2: #6e4535;
+  --rc-3: #b06b50;
+  --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* 종이 결: 아주 옅은 세로 그라데이션 */
+html,
+body {
+  background:
+    radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--surface) 70%, transparent), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+  letter-spacing: -0.005em;
+}
+::selection {
+  background: var(--accent-soft);
+}
+
+/* ---------- 상단바: 책 머리글 ---------- */
+.topbar {
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  border-bottom: 1px solid var(--rule);
+}
+.topbar-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+}
+.icon-btn {
+  border-radius: 999px;
+  color: var(--text);
+}
+.chip-btn {
+  border-color: var(--rule);
+  background: transparent;
+  font-weight: 500;
+}
+
+/* ---------- 공통 ---------- */
+.page {
+  padding: 20px 18px 32px;
+  gap: 14px;
+}
+.card {
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+.card h2,
+.sheet-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.btn {
+  border-radius: 4px;
+  border-color: var(--rule);
+  background: transparent;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.btn.primary {
+  font-weight: 600;
+}
+.input {
+  border-radius: 4px;
+  border-color: var(--rule);
+  background: var(--surface);
+}
+.input:focus {
+  outline: 1.5px solid var(--accent);
+}
+.tabs,
+.seg {
+  background: transparent;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  padding: 0;
+  gap: 0;
+}
+.tab,
+.seg button {
+  border-radius: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab.active,
+.seg button.active {
+  background: transparent;
+  box-shadow: none;
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 700;
+}
+.chip {
+  border-color: var(--rule);
+  background: transparent;
+}
+.tag {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+/* ---------- 홈: 책 표지 + 목차 ---------- */
+.home {
+  padding: calc(var(--sa-top) + 40px) 22px 40px;
+  gap: 26px;
+}
+.cover {
+  text-align: center;
+  padding: 28px 8px 26px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.cover::before,
+.cover::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+}
+.cover::before {
+  top: 4px;
+}
+.cover::after {
+  bottom: 4px;
+}
+.cover-kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  color: var(--gold);
+  font-weight: 600;
+}
+.cover h1 {
+  margin: 10px 0 6px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+.cover-sub {
+  margin: 0;
+  font-family: var(--serif);
+  color: var(--muted);
+}
+.cover-orn {
+  display: block;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 2px;
+  color: var(--gold);
+}
+
+.card.continue {
+  border-left: 0;
+  position: relative;
+  padding-left: 22px;
+  overflow: hidden;
+}
+/* 책갈피 리본 */
+.card.continue::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--accent);
+}
+.card.continue b {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.35rem;
+}
+.card.continue .muted {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+}
+.card.notice {
+  background: var(--surface);
+  border-color: var(--rule);
+}
+
+.toc-title {
+  margin: 0 0 4px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+  color: var(--muted);
+  font-weight: 500;
+}
+.toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.toc a {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 52px;
+  padding: 14px 4px;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.toc li:first-child a {
+  border-top: 1px solid var(--border);
+}
+.toc a:active {
+  background: var(--surface-2);
+}
+.toc-no {
+  flex: 0 0 2ch;
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+.toc-label {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+.toc-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toc-dots {
+  flex: 1;
+  min-width: 12px;
+  border-bottom: 1px dotted var(--rule);
+  transform: translateY(-4px);
+}
+.toc-arrow {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.home-foot {
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.7;
+  margin: 4px 0 0;
+}
+
+/* ---------- 책/장 선택 ---------- */
+.book,
+.num {
+  border-radius: 4px;
+  border-color: var(--border);
+}
+.book-abbr {
+  font-family: var(--serif);
+  font-weight: 700;
+}
+.num {
+  font-family: var(--serif);
+  font-weight: 500;
+}
+
+/* ---------- 성경읽기: 책 본문 ---------- */
+.reader-body {
+  padding: 12px 18px 140px;
+}
+.verse {
+  border-radius: 2px;
+  gap: 12px;
+}
+/* 절 번호: 기본(0.72em)보다 크게 */
+.vnum {
+  min-width: 1.8em;
+  padding-top: 0.08em;
+  font-family: var(--serif);
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--reader-num, var(--gold));
+}
+.vnum-inline {
+  font-family: var(--serif);
+  font-size: 0.9em;
+  color: var(--gold);
+}
+.verse.selected {
+  background: var(--accent-soft);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.ps-title {
+  font-family: var(--serif);
+}
+.float-arrow {
+  border-color: var(--rule);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+.read-count {
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid var(--border);
+}
+.action-bar,
+.sheet {
+  border-radius: 10px 10px 0 0;
+  border-top: 1px solid var(--rule);
+}
+.action-row button {
+  border-radius: 4px;
+  background: transparent;
+  border-color: var(--rule);
+  font-weight: 500;
+}
+.sheet-backdrop {
+  background: rgba(30, 20, 10, 0.38);
+}
+
+/* ---------- 목록 / 신앙고백 / 설정 ---------- */
+.result-list li,
+.item-list li {
+  border-radius: 4px;
+}
+.ref {
+  font-family: var(--serif);
+}
+.creed {
+  border-radius: 4px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.creed h2 {
+  letter-spacing: 0.06em;
+  color: var(--gold);
+}
+.preview {
+  border-radius: 4px;
+}
+.first-run h1 {
+  font-weight: 700;
+}
+.toast {
+  border-radius: 4px;
+}
+.update-banner {
+  border-radius: 6px;
+  border-color: var(--rule);
+}

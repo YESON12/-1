@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:paper": "tsc --noEmit && vite build --mode paper --outDir dist-paper",
+    "dev:paper": "vite --mode paper",
+    "build:site": "tsc --noEmit && vite build --mode paper --outDir site-dist/app --emptyOutDir && node -e \"require('fs').cpSync('landing','site-dist',{recursive:true})\"",
+    "preview:site": "vite preview --outDir site-dist",
     "build:android": "tsc --noEmit && vite build --mode android && cap sync android",
     "apk": "npm run build:android && cd android && gradlew.bat assembleRelease",
     "preview": "vite preview",

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4eee2" />
+    <title>My Lovely Bible — 종이책처럼 읽는 성경</title>
+    <meta name="description" content="설치 없이 홈 화면에 추가해 쓰는 성경 앱. 역본 비교, 형광펜, 메모, 단어 검색, 기도수첩, 오프라인 읽기." />
+    <link rel="icon" href="./app/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400;500;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f4eee2;
+        --paper: #fbf8f1;
+        --paper-2: #ece4d4;
+        --ink: #2b241c;
+        --muted: #857a6a;
+        --line: #ddd2bf;
+        --rule: #c9b998;
+        --accent: #8b3a2a;
+        --gold: #a88443;
+        --serif: 'Noto Serif KR', 'Nanum Myeongjo', 'AppleMyungjo', 'Batang', serif;
+        --sans: 'IBM Plex Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1b1713;
+          --paper: #231e19;
+          --paper-2: #2d2620;
+          --ink: #ece3d3;
+          --muted: #a39785;
+          --line: #3a3129;
+          --rule: #5a4b39;
+          --accent: #d9957a;
+          --gold: #c9a464;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: radial-gradient(120% 50% at 50% 0%, var(--paper), transparent 70%), var(--bg);
+        color: var(--ink);
+        font-family: var(--sans);
+        line-height: 1.7;
+        word-break: keep-all;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; }
+      .wrap { width: min(1080px, 100% - 32px); margin: 0 auto; }
+
+      /* 머리글 */
+      .nav {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 0; border-bottom: 1px solid var(--rule);
+      }
+      .brand { font-family: var(--serif); font-weight: 700; color: var(--accent); text-decoration: none; font-size: 1.1rem; }
+      .nav a.small { font-size: 0.9rem; color: var(--muted); text-decoration: none; }
+      .nav a.small:hover { color: var(--accent); }
+
+      /* 첫 화면 */
+      .hero {
+        display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center;
+        padding: 72px 0 88px;
+      }
+      .kicker { margin: 0 0 14px; font-size: 0.75rem; letter-spacing: 0.32em; color: var(--gold); font-weight: 600; }
+      h1 {
+        margin: 0; font-family: var(--serif); font-weight: 700;
+        font-size: clamp(2.2rem, 5.4vw, 3.6rem); line-height: 1.25; letter-spacing: -0.02em;
+      }
+      h1 em { font-style: normal; color: var(--accent); }
+      .lead { margin: 22px 0 32px; font-size: 1.08rem; color: var(--muted); max-width: 30em; }
+      .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 26px;
+        border-radius: 4px; text-decoration: none; font-weight: 600; letter-spacing: 0.02em;
+        transition: transform 0.15s ease, background 0.15s ease;
+      }
+      .btn.primary { background: var(--accent); color: var(--paper); }
+      .btn.primary:hover { transform: translateY(-1px); }
+      .btn.ghost { border: 1px solid var(--rule); color: var(--ink); }
+      .btn.ghost:hover { background: var(--paper); }
+      .note { margin: 18px 0 0; font-size: 0.85rem; color: var(--muted); }
+
+      /* 휴대폰 모형 (앱 첫 화면을 그대로 옮김) */
+      .phone {
+        justify-self: center; width: min(320px, 100%); aspect-ratio: 9 / 18.5;
+        border-radius: 40px; padding: 12px; background: #2a231c;
+        box-shadow: 0 40px 80px -30px rgba(60, 35, 15, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        transform: rotate(2deg);
+      }
+      .screen {
+        height: 100%; border-radius: 30px; overflow: hidden; padding: 34px 20px 20px;
+        background: radial-gradient(120% 50% at 50% 0%, #fbf8f1, transparent 70%), #f4eee2; color: #2b241c;
+      }
+      .m-cover { text-align: center; padding: 16px 0; border-top: 3px double #c9b998; border-bottom: 3px double #c9b998; }
+      .m-cover small { display: block; font-size: 8px; letter-spacing: 0.3em; color: #a88443; }
+      .m-cover b { display: block; font-family: var(--serif); color: #8b3a2a; font-size: 21px; margin: 4px 0 2px; }
+      .m-cover span { font-family: var(--serif); font-size: 10px; color: #857a6a; }
+      .m-continue {
+        margin: 16px 0; padding: 10px 12px 10px 16px; background: #fbf8f1; border: 1px solid #ddd2bf;
+        border-radius: 4px; position: relative; overflow: hidden;
+      }
+      .m-continue::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #8b3a2a; }
+      .m-continue small { display: block; font-size: 8px; letter-spacing: 0.18em; color: #857a6a; }
+      .m-continue b { font-family: var(--serif); font-size: 15px; }
+      .m-toc { list-style: none; margin: 0; padding: 0; font-size: 11px; }
+      .m-toc li { display: flex; gap: 8px; align-items: baseline; padding: 8px 2px; border-bottom: 1px solid #ddd2bf; }
+      .m-toc i { font-style: normal; color: #a88443; font-family: var(--serif); font-size: 9px; }
+      .m-toc b { font-family: var(--serif); font-weight: 600; }
+      .m-toc s { flex: 1; border-bottom: 1px dotted #c9b998; transform: translateY(-3px); }
+      .m-toc span { color: #857a6a; font-size: 9px; }
+
+      /* 구절 띠 */
+      .verse-band {
+        text-align: center; padding: 56px 16px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+      }
+      .verse-band p { margin: 0; font-family: var(--serif); font-size: clamp(1.2rem, 3vw, 1.6rem); line-height: 1.7; }
+      .verse-band cite { display: block; margin-top: 10px; font-style: normal; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.12em; }
+
+      /* 기능 */
+      section { padding: 88px 0; }
+      .sec-head { text-align: center; margin-bottom: 48px; }
+      .sec-head p.kicker { margin-bottom: 10px; }
+      h2 { margin: 0; font-family: var(--serif); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.2rem); letter-spacing: -0.01em; }
+      .features { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+      .feature { padding: 30px 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 50%, transparent); }
+      .feature .no { font-family: var(--serif); color: var(--gold); font-size: 0.85rem; }
+      .feature h3 { margin: 8px 0 6px; font-family: var(--serif); font-size: 1.15rem; }
+      .feature p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+      /* 설치 방법 */
+      .steps { list-style: none; margin: 0 auto; padding: 0; max-width: 720px; counter-reset: s; }
+      .steps li { display: grid; grid-template-columns: 56px 1fr; gap: 16px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+      .steps li::before {
+        counter-increment: s; content: counter(s);
+        width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--rule);
+        display: grid; place-items: center; font-family: var(--serif); color: var(--accent); font-weight: 700;
+      }
+      .steps h3 { margin: 6px 0 4px; font-family: var(--serif); font-size: 1.1rem; }
+      .steps p { margin: 0; color: var(--muted); }
+      .steps code { background: var(--paper-2); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+      .center { text-align: center; margin-top: 40px; }
+
+      footer { padding: 36px 0 48px; border-top: 1px solid var(--rule); text-align: center; color: var(--muted); font-size: 0.85rem; }
+      footer b { font-family: var(--serif); color: var(--accent); }
+
+      @media (max-width: 820px) {
+        .hero { grid-template-columns: 1fr; gap: 48px; padding: 48px 0 64px; text-align: center; }
+        .lead { margin-inline: auto; }
+        .cta { justify-content: center; }
+        .phone { transform: none; width: min(280px, 100%); }
+        .features { grid-template-columns: 1fr 1fr; }
+        section { padding: 64px 0; }
+      }
+      @media (max-width: 520px) {
+        .features { grid-template-columns: 1fr; }
+        .feature { padding: 24px 20px; }
+        .nav a.small { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .btn { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="wrap nav">
+      <a class="brand" href="#">My Lovely Bible</a>
+      <a class="small" href="#install">설치 방법</a>
+    </header>
+
+    <main>
+      <div class="wrap hero">
+        <div>
+          <p class="kicker">HOLY BIBLE · WEB APP</p>
+          <h1>말씀을<br /><em>종이책처럼</em> 읽다</h1>
+          <p class="lead">
+            아이보리 종이에 명조체로 앉힌 성경. 형광펜을 긋고, 메모를 남기고, 여러 역본을 나란히 펼쳐 보세요.
+            앱 스토어 없이 홈 화면에 추가하면 인터넷이 없어도 열립니다.
+          </p>
+          <div class="cta">
+            <a class="btn primary" href="./app/">앱 열기 →</a>
+            <a class="btn ghost" href="#install">홈 화면에 추가하는 법</a>
+          </div>
+          <p class="note">무료 · 회원가입 없음 · 기록은 내 기기에만 저장</p>
+        </div>
+
+        <div class="phone" aria-label="앱 첫 화면 미리보기" role="img">
+          <div class="screen" aria-hidden="true">
+            <div class="m-cover">
+              <small>HOLY BIBLE</small>
+              <b>My Lovely Bible</b>
+              <span>성경과 찬송</span>
+            </div>
+            <div class="m-continue"><small>이어서 읽기</small><b>시편 23장</b></div>
+            <ol class="m-toc">
+              <li><i>01</i><b>성경읽기</b><s></s><span>66권 본문</span></li>
+              <li><i>02</i><b>통합리스트</b><s></s><span>형광펜 · 메모</span></li>
+              <li><i>03</i><b>단어검색</b><s></s><span>말씀 찾기</span></li>
+              <li><i>04</i><b>새찬송가</b><s></s><span>찬송</span></li>
+              <li><i>05</i><b>주기도문</b><s></s><span>기도</span></li>
+              <li><i>06</i><b>사도신경</b><s></s><span>신앙고백</span></li>
+              <li><i>07</i><b>기도수첩</b><s></s><span>기도 제목</span></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="verse-band">
+        <p>주의 말씀은 내 발에 등이요<br />내 길에 빛이니이다</p>
+        <cite>시편 119:105</cite>
+      </div>
+
+      <section class="wrap" id="features">
+        <div class="sec-head">
+          <p class="kicker">FEATURES</p>
+          <h2>읽고, 긋고, 적고, 기도하기</h2>
+        </div>
+        <div class="features">
+          <article class="feature"><span class="no">01</span><h3>역본 비교</h3><p>가져온 여러 역본을 한 화면에 절마다 나란히 놓고 읽습니다.</p></article>
+          <article class="feature"><span class="no">02</span><h3>형광펜 · 메모</h3><p>다섯 가지 색으로 긋고, 절마다 묵상 메모를 남깁니다.</p></article>
+          <article class="feature"><span class="no">03</span><h3>단어 검색</h3><p>구약 · 신약 · 원하는 범위를 정해 말씀을 찾습니다.</p></article>
+          <article class="feature"><span class="no">04</span><h3>듣기</h3><p>본문을 소리로 읽어 줍니다. 걷거나 운전할 때도.</p></article>
+          <article class="feature"><span class="no">05</span><h3>기도수첩</h3><p>기도 제목을 적어 두고 응답된 기도를 표시합니다.</p></article>
+          <article class="feature"><span class="no">06</span><h3>오프라인</h3><p>한 번 열어 두면 비행기 안에서도, 지하에서도 열립니다.</p></article>
+        </div>
+      </section>
+
+      <section class="wrap" id="install">
+        <div class="sec-head">
+          <p class="kicker">INSTALL</p>
+          <h2>홈 화면에 추가하기</h2>
+        </div>
+        <ol class="steps">
+          <li>
+            <div>
+              <h3>휴대폰에서 앱 열기</h3>
+              <p>안드로이드는 Chrome, 아이폰은 Safari로 아래 ‘앱 열기’를 누릅니다.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>홈 화면에 추가</h3>
+              <p>Chrome은 오른쪽 위 <code>⋮</code> → <b>홈 화면에 추가</b>, Safari는 공유 버튼 → <b>홈 화면에 추가</b>를 누릅니다.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>성경 파일 가져오기</h3>
+              <p>가지고 계신 성경 데이터(<code>.bdb</code>) 파일을 <b>설정 → 성경 파일 가져오기</b>로 한 번만 넣으면 됩니다. 본문은 기기 안에만 저장됩니다.</p>
+            </div>
+          </li>
+        </ol>
+        <p class="center"><a class="btn primary" href="./app/">앱 열기 →</a></p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap"><b>My Lovely Bible</b> · 2011년 안드로이드 앱을 오늘의 브라우저에 맞게 다시 만들었습니다.</div>
+    </footer>
+  </body>
+</html>

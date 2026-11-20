@@ -8,18 +8,51 @@ interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
 }
 
-const MENU: { to: string; label: string; icon: string }[] = [
-  { to: '/books', label: '성경읽기', icon: '📖' },
-  { to: '/lists', label: '통합리스트', icon: '🔖' },
-  { to: '/search', label: '단어검색', icon: '🔍' },
-  { to: '/hymns', label: '새찬송가', icon: '🎵' },
-  { to: '/readings', label: '교독문', icon: '📜' },
-  { to: '/creed/lord', label: '주기도문', icon: '🙏' },
-  { to: '/creed/apostles', label: '사도신경', icon: '✝️' },
-  { to: '/prayers', label: '기도수첩', icon: '📝' },
-  { to: '/settings', label: '설정', icon: '⚙️' },
-  { to: '/help', label: '사용설명', icon: '❔' },
+const MENU: { to: string; label: string; icon: string; desc: string }[] = [
+  { to: '/books', label: '성경읽기', icon: '📖', desc: '66권 본문' },
+  { to: '/lists', label: '통합리스트', icon: '🔖', desc: '북마크 · 형광펜 · 메모' },
+  { to: '/search', label: '단어검색', icon: '🔍', desc: '말씀 찾기' },
+  { to: '/hymns', label: '새찬송가', icon: '🎵', desc: '찬송' },
+  { to: '/readings', label: '교독문', icon: '📜', desc: '함께 읽기' },
+  { to: '/creed/lord', label: '주기도문', icon: '🙏', desc: '기도' },
+  { to: '/creed/apostles', label: '사도신경', icon: '✝️', desc: '신앙고백' },
+  { to: '/prayers', label: '기도수첩', icon: '📝', desc: '기도 제목' },
+  { to: '/settings', label: '설정', icon: '⚙️', desc: '글꼴 · 색 · 성경 파일' },
+  { to: '/help', label: '사용설명', icon: '❔', desc: '도움말' },
 ];
+
+const PAPER = __THEME__ === 'paper';
+
+function Ornament() {
+  return (
+    <svg className="cover-orn" viewBox="0 0 24 24" aria-hidden>
+      <path d="M12 3v18M7 8h10" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function Toc() {
+  return (
+    <nav aria-label="목차">
+      <h2 className="toc-title">목 차</h2>
+      <ol className="toc">
+        {MENU.map((m, i) => (
+          <li key={m.to}>
+            <Link to={m.to}>
+              <span className="toc-no">{String(i + 1).padStart(2, '0')}</span>
+              <span className="toc-label">{m.label}</span>
+              <span className="toc-dots" aria-hidden />
+              <span className="toc-desc">{m.desc}</span>
+              <span className="toc-arrow" aria-hidden>
+                ›
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
 
 export default function Home() {
   const { settings } = useSettings();
@@ -39,10 +72,19 @@ export default function Home() {
 
   return (
     <div className="home">
-      <header className="home-hero">
-        <h1>My Lovely Bible</h1>
-        <p>성경과 찬송</p>
-      </header>
+      {PAPER ? (
+        <header className="cover">
+          <Ornament />
+          <p className="cover-kicker">HOLY BIBLE</p>
+          <h1>My Lovely Bible</h1>
+          <p className="cover-sub">성경과 찬송</p>
+        </header>
+      ) : (
+        <header className="home-hero">
+          <h1>My Lovely Bible</h1>
+          <p>성경과 찬송</p>
+        </header>
+      )}
 
       {versions && versions.length === 0 ? (
         <section className="card notice">
@@ -66,16 +108,20 @@ export default function Home() {
         )
       )}
 
-      <nav className="menu-grid">
-        {MENU.map((m) => (
-          <Link key={m.to} to={m.to} className="menu-item">
-            <span className="menu-icon" aria-hidden>
-              {m.icon}
-            </span>
-            {m.label}
-          </Link>
-        ))}
-      </nav>
+      {PAPER ? (
+        <Toc />
+      ) : (
+        <nav className="menu-grid">
+          {MENU.map((m) => (
+            <Link key={m.to} to={m.to} className="menu-item">
+              <span className="menu-icon" aria-hidden>
+                {m.icon}
+              </span>
+              {m.label}
+            </Link>
+          ))}
+        </nav>
+      )}
 
       {installEvt && (
         <button
@@ -85,9 +131,11 @@ export default function Home() {
             setInstallEvt(null);
           }}
         >
-          📲 홈 화면에 앱 설치
+          {PAPER ? '홈 화면에 앱 설치' : '📲 홈 화면에 앱 설치'}
         </button>
       )}
+
+      {PAPER && <p className="home-foot">주의 말씀은 내 발에 등이요 내 길에 빛이니이다 · 시편 119:105</p>}
     </div>
   );
 }

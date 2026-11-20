@@ -17,6 +17,8 @@ concurrency:
 
 jobs:
   build:
+    # 기존 디자인은 YESON12/-1 저장소에서만 배포 (종이책 사이트는 deploy-site.yml)
+    if: github.repository == 'YESON12/-1'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
